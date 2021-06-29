@@ -13,10 +13,10 @@ let rightPressed = false;
 let leftPressed = false;
 
 function chColor() {
-  return `#${((1 << 24) * Math.random()| 0).toString(16)}`;
+  return `#${((1 << 24) * Math.random() || 0).toString(16)}`;
 }
 // What is the best way to deal with this?
-var color = chColor();
+let color = chColor();
 
 // setting up the brick walls
 const brickRowCount = 3;
@@ -73,71 +73,10 @@ function drawBricks() {
   }
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBricks();
-  drawBall();
-  drawPaddle();
-  drawScore();
-  drawLives();
-  collisionDetection();
-
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    color = chColor();
-    dx = -dx;
-  }
-  if (y + dy < ballRadius) {
-    color = chColor();
-    dy = -dy;
-  }
-  // if ball hit the paddle
-  else if (y + dy > canvas.height - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy * 1.1;
-      color = chColor();
-    }
-    else {
-      lives -= 1;
-      if (!lives) {
-        alert('GAME OVER');
-        document.location.reload();
-      }
-      else {
-        x = canvas.width / 2;
-        y = canvas.height - 30;
-        dx = 3;
-        dy = -3;
-        paddleX = (canvas.width - paddleWidth) / 2;
-      }
-    }
-  }
-
-  if (rightPressed) {
-    paddleX += 7;
-    if (paddleX + paddleWidth > canvas.width) {
-      paddleX = canvas.width - paddleWidth;
-    }
-  }
-  else if (leftPressed) {
-    paddleX -= 7;
-    if (paddleX < 0) {
-      paddleX = 0;
-    }
-  }
-  x += dx;
-  y += dy;
-  requestAnimationFrame(draw);
-}
-
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
-document.addEventListener('mousemove', mouseMoveHandler, false);
-
 function keyDownHandler(e) {
   if (e.key == 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
-  }
-  else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = true;
   }
 }
@@ -145,8 +84,7 @@ function keyDownHandler(e) {
 function keyUpHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = false;
-  }
-  else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = false;
   }
 }
@@ -157,6 +95,10 @@ function mouseMoveHandler(e) {
     paddleX = relativeX - paddleWidth / 2;
   }
 }
+
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener('mousemove', mouseMoveHandler, false);
 
 // collision detection function with the bricks
 function collisionDetection() {
@@ -182,12 +124,66 @@ function collisionDetection() {
 function drawScore() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
-  ctx.fillText('Score: ' + score * 2, 8, 20);
+  ctx.fillText(`Score: ${score * 2}`, 8, 20);
 }
 
 function drawLives() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
-  ctx.fillText("Lives: "+lives, canvas.width - 65, 20);
+  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
+  drawBall();
+  drawPaddle();
+  drawScore();
+  drawLives();
+  collisionDetection();
+
+  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    color = chColor();
+    dx = -dx;
+  }
+  if (y + dy < ballRadius) {
+    color = chColor();
+    dy = -dy;
+  }
+  // if ball hit the paddle
+  else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy * 1.1;
+      color = chColor();
+    } else {
+      lives -= 1;
+      if (!lives) {
+        alert('GAME OVER');
+        document.location.reload();
+      } else {
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        dx = 3;
+        dy = -3;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
+    }
+  }
+
+  if (rightPressed) {
+    paddleX += 7;
+    if (paddleX + paddleWidth > canvas.width) {
+      paddleX = canvas.width - paddleWidth;
+    }
+  } else if (leftPressed) {
+    paddleX -= 7;
+    if (paddleX < 0) {
+      paddleX = 0;
+    }
+  }
+  x += dx;
+  y += dy;
+  requestAnimationFrame(draw);
+}
+
 draw();
