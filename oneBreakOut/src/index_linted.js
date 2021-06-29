@@ -13,7 +13,7 @@ let rightPressed = false;
 let leftPressed = false;
 
 function chColor() {
-  return `#${((1 << 24) * Math.random() || 0).toString(16)}`;
+  return `#${((1 < 24) * Math.random() || 0).toString(16)}`;
 }
 // What is the best way to deal with this?
 let color = chColor();
@@ -74,7 +74,7 @@ function drawBricks() {
 }
 
 function keyDownHandler(e) {
-  if (e.key == 'Right' || e.key === 'ArrowRight') {
+  if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = true;
@@ -149,6 +149,7 @@ function draw() {
   if (y + dy < ballRadius) {
     color = chColor();
     dy = -dy;
+  // eslint-disable-next-line brace-style
   }
   // if ball hit the paddle
   else if (y + dy > canvas.height - ballRadius) {
